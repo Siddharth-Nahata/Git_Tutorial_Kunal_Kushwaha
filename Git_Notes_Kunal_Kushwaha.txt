@@ -1,0 +1,135 @@
+1)Stage is Unstage karna h wapas before commiting --> git restore --staged names.txt
+	To commit --> git commit -m "names.txt file deleted"
+
+2)git log -> to see all history of the project(All commits made in the history )
+3)Going back to Commits:
+-----------------------
+Let say we have 3 commits in git log in total and we want to remove 2 latest commits so that I can rollback to the 1 st commit, then copy the copy the "commit id" just below the commits which you want to remove(OR copy the 1st commit id)
+Whatever commit id I copy, all the commits above it will get removed
+	git reset 54197b6cb33dbcd1dcf40835014d89b8b128c50a
+4)Git Stash:
+------------
+Let say you are working on a project and you are working on a feature and you have few lines of code to change. Now you want to try out something new with a clean codebase, all the changes & the files you have modified I want to remove those but I also dont want to save the progress as a separate commit.
+This is like putting all our work somewhere else without making a commit, without making history in the project and whenever I wanted that things back I can get back. 
+I also dont want to commit the changes and also dont want to loose these changes ---> I want you to go to backstage and come back when i want 
+	>git status
+		On branch master
+		Changes to be committed:
+  		use "git restore --staged <file>..." to unstage)
+       		 new file:   houses.txt
+       		 modified:   names.txt
+	>git add .-->Staging area meh add karne ke baad hi stash karo
+	>git stash-->Using these, it will revert to previous last commit
+	>git stash pop--> to bring back all the files whiich has gone to backstage in the unstaging area
+	>git stash clear--> To permanently delete from backstage also
+
+5)To attach github repo with your project (folder in local),
+	git remote add origin https://github.com/Siddharth-Nahata/Git-tutorial.git
+The name of this url is "origin"
+	
+6)To get all the URLs attached to this folder,
+	git remote -v
+
+7)To push the changes to github,
+	git push origin master--->to which url you want to push the changes is origin
+				  to which branch you want to push the changes is master
+
+8)In git log, to check the lastest commit that is there in the remote branch--> It has origin/master symbol
+	commit 54197b6cb33dbcd1dcf40835014d89b8b128c50a (origin/master)
+And. if it shows like this,
+	commit e938fd925c368855b265f2a4fac6ad628a9c5c60 (HEAD -> master, origin/master)
+
+Means, there is no commits above it that are extra which are not already on remote url.
+
+9)To create a branch:
+	git branch feature
+10)To switch to feature branch:
+	git checkout feature-->It will point head to the feature branch and not in master/main
+
+11)Head -->it is a pointer that says all the new commits that you will be making will be added to the head. By default, it always points to the master branch
+
+12)To merge feature branch with main/master branch:
+	git merge feature
+Now your branch is part of the main branch
+
+
+13)FORK:
+---------
+You cannot directly make changes to anyone's account/folders/project. we have to fork it.
+What is the way to contribute to the code sample when you dont have the permission to edit that?
+We create a copy of that project in our own account by doing fork.
+
+Since that folder will now be in your account, we can do anything-->click Code-->copy the url
+NOTE: Any folder which starts with our own account, the name of that will be origin
+
+	>git clone url(paste here)
+	>make some changes and push it
+	>git push origin sid
+	>Comapre & pull request in github
+	>create Pull request(PR)
+
+From where you have forked the project that is called Upstream Url by convention
+	git remote add upstream url(paste the url)
+and, origin is personal url
+
+14)Never commit on the main/master branch as it is used by lakhs of people
+
+15)whatever code I have in Feature branch of my own account, please merge that into main project's main branch
+
+16)Pull request: 
+	Sid merged 1 commit into sid-nahata:main1 from brad:feature1
+It means,Brad is saying that i have branch called feature1 so sid can you please merge that branch into your main1 branch.
+
+When you create your own copy,and you create any change in your copy,how do you ensure that the changes you have made in your copy be visible in main copy, we request via a pull request. Then people will review your code, suggest some changes, you will make those changes and when this is merged, your code will be in main project 
+
+17)For every bug,feature create a new branch so that it will also create new Pull request.
+
+18)If a branch already has a pull request associated with it, it will not allow you to create a new pull request even if you do git push origin sid.
+    So all the commits will be added to that PR only.
+    That is, one PR means one Branch
+
+19)To remove a commit & commit history after a PR is raised,
+	git reset commit id
+it will be unstaged
+>git add .
+>git stash-->it will go to stash area
+>git push origin sid -f
+when i push this, i need to forced push this because the online repo contains a commit that my repo doesn't. So force push this as commits are interlinked.
+
+20)How to make sure that main branch of the upstream and my own fork's main branch always being maintained?
+	->Use fetch upstream button in github
+	->OR, git checkout main
+	      >In my main branch of fork, i only have 1 commit but in reality in upstream, it has 3 commits.
+	      >So First I need to fetch all these commits/changes
+	      > git fetch --all --prune -->--all is for all the branches and --prune is for fetching the deleted branch also
+	      >Reset the main branch of my origin to the main branch of upstream
+		git reset --hard upstream/main
+		git log--> we will also have 3 commits
+		git push origin main
+
+Note:- Whenever you create a new branch, your new branch is going to be created from your head so make sure when you creatwe branch, your main/master branch is updated
+21)Git Pull:
+------------
+git pull upstream main  ->We did git fetch before, git pull internally also does the same thing.
+git push origin main--> My local folder should be in sync with the main upstream branch, so also sync the origin url.
+
+22)Squashing commits:
+---------------------
+If you have a lot of commits you are working on and you want to merge all those multiple commits into a single commit, it is called Squashing.  ie how to squash commits into just a single commit
+we can use Rebase command,
+	git rebase -i commit_id(last commit id)--> So all the commits above this commit id , I can pick & squash. -i is for interactive environment
+		In the interactive mode,
+			pick d9dd724 1 - This is the main commit that we have is 1, these 3 commit will be updated into this main comnmit
+			s    768975g 2 - These 3 will be squashed into 1 single commit that is pick. 
+			s    768977g 3 -
+			s    768978g 4 -
+	Squash(s) means whichever is listed as pick,merge that into the previous commit
+	pick means basically you are taking this commit,squash basically means above these 's' whichever pick you have merge your commit into that.
+	To exit from interactive shell, use escape + :x-->write commits merged--> :x to go back to the cmd
+	Now do git log, all those commit will be merged into one single commit.
+Tricks: If you want to merge only 2 commits into a single commit then use git reset, so it will be unstaged and then you can commit again 
+
+23)Merge Conflicts
+-------------------
+When somebody else also want to change the same line of code that we want to change and we commit simultaneously then GIT will get confuse which PR to merge, so it will ask which one to take it is a merge conflict.
+rahul made a chnge in line 5 and I also did change in line 5 so GIT will get confuse which change you wnat me to take?
